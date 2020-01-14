@@ -10,67 +10,84 @@
 
 #include <stdint.h> //Just for Visual Studio Code's InteliJ
 
+/* Frames lengths - begin*/
 #define STD_MSG_MAX_PAYLOAD_LEN   254                      //Max length of payload in standard frame
 #define STD_MSG_SIZEMAX           STD_MSG_MAX_PAYLOAD_LEN + 5    //Max length of whole standard frame
 #define EXT_MSG_MAX_PAYLOAD_LEN   2048                     //Max length of payload in extended frame
 #define EXT_MSG_SIZEMAX           EXT_MSG_MAX_PAYLOAD_LEN + 8    //Max length of whole extended frame
+/* Frames lengths - end*/
 
-typedef uint8_t AHRS_RawFrame[__STD_MSG_SIZEMAX];
+typedef uint8_t AHRS_RawStdFrame[STD_MSG_SIZEMAX];
+typedef uint8_t AHRS_RawExtFrame[EXT_MSG_SIZEMAX];
 
-typedef enum {
-    XDI_TemperatureGroup = 
-
-} AHRS_MID;
-
-
-/*typedef struct
+/*Structures defining possible pockets - begin*/
+typedef struct
 {
-    uint8_t Preambule = 0xFA;   //Preambule. Indicator of start of packet    
-    uint8_t BID = 0xFF;         //Bus identifier or Address   
-    uint8_t MID;                //Message identifier
-    uint8_t LEN;                //Nr of bytes in Data field. Max 254 for Standard Lengh message frame
-    uint8_t Data[254];          //Data bytes
-    uint8_t Checksum;           //Checksumm of message
-
-} AHRS_StdLenFrame;
+    double q[4];
+}Pocket_Quaternions;
 
 typedef struct
 {
-    uint8_t Preambule = 0xFA;   //Preambule. Indicator of start of packet    
-    uint8_t BID = 0xFF;         //Bus identifier or Address    
-    uint8_t MID;                //Message identifier
-    uint8_t LEN = 255;          //255 for Extended Lengh message frame
-    uint16_t EXTLEN;            //Nr of bytes in Data field:  (255 - 2048)
-    uint8_t Data[2048];         //Data bytes
-    uint8_t Checksum;           //Checksumm of message    
-} AHRS_ExtLenFrame; */
+    double Roll, Pitch, Yaw;
+}Pocket_EulerAngles;
 
 typedef struct
 {
-    uint8_t MID;                                //Message identifier
-    uint8_t LEN;                                //Nr of bytes in Data field
-    uint8_t Data[__STD_MSG_MAX_PAYLOAD_LEN];    //Data field
-
-} AHRS_StdMessage;
+    double a,b,c,d,e,f,g,h,i;
+}Pocket_RotationMatrix;
 
 typedef struct
 {
-    uint8_t MID;                                //Message identifier
-    uint8_t LEN;                                //Nr of bytes in Data field
-    uint8_t Data[__EXT_MSG_MAX_PAYLOAD_LEN];    //Data field
-} AHRS_ExtMessage;
+    double dv_x, dv_y, dv_z;
+}Pocket_DeltaV;
 
 typedef struct
 {
-    /* data */
-}AHRS_Quaternions;
+    double dq[4];
+}Pocket_DeltaQ;
+
+typedef struct
+{
+    double accX, accY, accZ;
+}Pocket_Acceleration;
+
+typedef struct
+{
+    double freeAccX, freeAccY, freeAccZ;
+}Pocket_FreeAcceleration;
+
+typedef struct
+{
+    double accX, accY, accZ;
+}Pocket_AccelerationHR;
+
+typedef struct
+{
+    double gyrX, gyrY, gyrZ;
+}Pocket_RateOFTurn;
+
+typedef struct
+{
+    double gyrX, gyrY, gyrZ;
+}Pocket_RateOFTurnHR;
+/*Structures defining possible pockets - end*/
+
+typedef struct 
+{
+    typedef enum PocketMID_t
+    {
+        quaternion, freeacc
+    } PocketMID;
+
+    union PocketData
+    {
+
+    }
+
+    Po
 
 
-AHRS_StdMessage AHRS_Parse_StdFrame(AHRS_STDFrame_Raw raw);
-AHRS_ExtMessage AHRS_Parse_ExtFrame(AHRS_EXTFrame_Raw raw);
-
-
-
+}Pocket_t;
 
 
 
